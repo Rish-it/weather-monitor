@@ -13,9 +13,11 @@ wss.on('connection', (ws: WebSocket) => {
     });
 });
 
-export const sendAlert = (userId: string, message: string) => {
+// Updated function to accept userId as a number
+export const sendAlert = (userId: number, message: string) => {
     alertClients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
+            // Send the alert message along with the userId
             client.send(JSON.stringify({ userId, message }));
         }
     });
