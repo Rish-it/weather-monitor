@@ -27,7 +27,7 @@ const DailySummary: React.FC = () => {
                 } else {
                     setError(data.error || 'Failed to fetch daily summary');
                 }
-            } catch (err) {
+            } catch {
                 setError('An error occurred while fetching the daily summary');
             }
         };

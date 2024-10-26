@@ -9,7 +9,7 @@ const cityImages: { [key: string]: string } = {
     Delhi: '/delhi.jpg',
     Mumbai: '/mumbai.jpg',
     Chennai: '/chennai.jpg',
-    Bangalore: '/bangalore.jpg', // Make sure this image exists in your public folder
+    Bangalore: '/bangalore.jpg', 
     Kolkata: '/kolkata.jpg',
     Hyderabad: '/hyderabad.jpg',
 };
@@ -17,8 +17,7 @@ const cityImages: { [key: string]: string } = {
 const Home: React.FC = () => {
     const [weatherData, setWeatherData] = useState<any[]>([]);
     const apiKey = 'a3c19ed6b404caad423f7a5ac8a418f3'; // Your OpenWeatherMap API key
-    const cities = Object.keys(cityImages); // Use keys from cityImages to ensure we get all cities
-
+    const cities = Object.keys(cityImages); 
     useEffect(() => {
         const fetchWeatherData = async () => {
             try {
@@ -62,3 +61,4 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+ 

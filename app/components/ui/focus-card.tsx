@@ -3,18 +3,18 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 
+interface CardProps {
+  card: {
+    title: string;
+    src: string;
+  };
+  index: number;
+  hovered: number | null;
+  setHovered: React.Dispatch<React.SetStateAction<number | null>>;
+}
+
 export const Card = React.memo(
-  ({
-    card,
-    index,
-    hovered,
-    setHovered,
-  }: {
-    card: any;
-    index: number;
-    hovered: number | null;
-    setHovered: React.Dispatch<React.SetStateAction<number | null>>;
-  }) => (
+  ({ card, index, hovered, setHovered }: CardProps) => (
     <div
       onMouseEnter={() => setHovered(index)}
       onMouseLeave={() => setHovered(null)}
@@ -26,8 +26,10 @@ export const Card = React.memo(
       <Image
         src={card.src}
         alt={card.title}
+        title={card.title}
         fill
         className="object-cover absolute inset-0"
+        priority={index < 3} // Prioritize loading for first three cards
       />
       <div
         className={cn(
@@ -45,12 +47,11 @@ export const Card = React.memo(
 
 Card.displayName = "Card";
 
-type Card = {
-  title: string;
-  src: string;
-};
+interface FocusCardsProps {
+  cards: { title: string; src: string }[];
+}
 
-export function FocusCards({ cards }: { cards: Card[] }) {
+export function FocusCards({ cards }: FocusCardsProps) {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
