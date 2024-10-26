@@ -11,7 +11,6 @@ interface WeatherData {
     dt: Date;
 }
 
-
 interface DailySummary {
     city: string;
     averageTemperature: number;
@@ -64,7 +63,7 @@ export async function GET() {
             },
         });
 
-        // Log the fetched daily data to check for Chennai
+        // Log the fetched daily data
         console.log("Fetched Daily Data:", dailyData);
 
         // Group data by city
@@ -86,7 +85,7 @@ export async function GET() {
             }
         }
 
-        // Log the summaries to check if Chennai is included
+        // Log the summaries
         console.log("Daily Summaries:", summaries);
 
         return NextResponse.json({ success: true, data: summaries });
