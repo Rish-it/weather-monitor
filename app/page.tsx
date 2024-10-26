@@ -54,7 +54,7 @@ const Home: React.FC = () => {
 
     return (
         <div>
-            <h1 className="text-3xl pb-5 font-bold text-center my-4"> ☀️ DAILY MONITOR ☁️</h1>
+            <h1 className="text-3xl pb-5 font-bold text-center my-4"> ☀️ Daily Cards ☁️</h1>
             <FocusCards cards={cards} />
             <DailySummaryButton />
         </div>

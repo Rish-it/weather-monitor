@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 
 const AlertComponent = () => {
     const [alerts, setAlerts] = useState<string[]>([]);
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8080');
+        setIsMounted(true); // Set mounted to true only on the client side
 
+        const socket = new WebSocket('ws://localhost:8080');
         socket.onopen = () => {
             console.log('WebSocket Client Connected');
         };
@@ -27,6 +29,8 @@ const AlertComponent = () => {
             socket.close();
         };
     }, []);
+
+    if (!isMounted) return null; // Avoid rendering on the server
 
     return (
         <div>

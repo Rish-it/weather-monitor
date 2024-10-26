@@ -10,10 +10,11 @@ import {
     Title,
     Tooltip,
     Legend,
+    Filler, // Import Filler for the fill option
 } from 'chart.js';
 
 // Register necessary scales and components
-ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip, Legend);
+ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip, Legend, Filler);
 
 interface WeatherChartProps {
     data: {

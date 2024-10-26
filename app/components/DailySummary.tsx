@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import WeatherChart from './weatherChart';
 
-// Define the shape of the daily summary data for each city
 interface DailySummaryData {
     city: string;
     averageTemperature: number;
@@ -11,11 +10,13 @@ interface DailySummaryData {
 }
 
 const DailySummary: React.FC = () => {
-    // State to hold the daily summary data for all cities
     const [summaries, setSummaries] = useState<DailySummaryData[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
+        setIsMounted(true); // Set mounted to true only on the client side
+
         const fetchDailySummary = async () => {
             try {
                 const response = await fetch('/api/dailySummary');
@@ -34,16 +35,17 @@ const DailySummary: React.FC = () => {
         fetchDailySummary();
     }, []);
 
+    if (!isMounted) return null; // Avoid rendering on the server
+
     if (error) {
         return <div className="text-red-500 text-center">Error: {error}</div>;
     }
 
-    // Prepare chart data
     const chartData = {
-        labels: summaries.map(summary => summary.city), // X-axis labels (city names)
-        temperatures: summaries.map(summary => summary.averageTemperature), // Y-axis data for average temperature
-        maxTemperatures: summaries.map(summary => summary.maxTemperature), // Y-axis data for max temperature
-        minTemperatures: summaries.map(summary => summary.minTemperature), // Y-axis data for min temperature
+        labels: summaries.map((summary) => summary.city),
+        temperatures: summaries.map((summary) => summary.averageTemperature),
+        maxTemperatures: summaries.map((summary) => summary.maxTemperature),
+        minTemperatures: summaries.map((summary) => summary.minTemperature),
     };
 
     return (
@@ -67,7 +69,6 @@ const DailySummary: React.FC = () => {
                 )}
             </div>
 
-            {/* Render the WeatherChart below the summaries */}
             {summaries.length > 0 && (
                 <div className="mt-6">
                     <WeatherChart data={chartData} />
