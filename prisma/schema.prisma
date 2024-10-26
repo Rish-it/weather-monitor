@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  settings      UserSettings?   @relation("UserSettingsToUser") // Relation name added to avoid ambiguity
+  alerts        Alert[]
+}
+
+model UserSettings {
+  id                   Int     @id @default(autoincrement())
+  userId               Int     @unique
+  temperatureThreshold Float   @default(0.0)
+  conditionType        String  @default("normal")
+  user                 User    @relation("UserSettingsToUser", fields: [userId], references: [id])
+}
+
+model Weather {
+  id          Int      @id @default(autoincrement())
+  city        String
+  main        String
+  temp        Float
+  feels_like  Float
+  dt          DateTime
+
+  @@index([city])
+}
+
+model DailySummary {
+  id              Int      @id @default(autoincrement())
+  city            String
+  date            DateTime
+  avgTemp         Float
+  maxTemp         Float
+  minTemp         Float
+  dominantWeather String
+
+  @@index([city])
+}
+
+model Alert {
+  id          Int      @id @default(autoincrement())
+  userId      Int?
+  city        String
+  triggeredAt DateTime
+  alertType   String
+  threshold   Float
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@index([city])
+}
