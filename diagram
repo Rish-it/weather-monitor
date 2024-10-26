@@ -1,0 +1,42 @@
++-----------------------------------+
+|          User Interface           |
+|  (React/Next.js with WebSocket)   |
++-------------------+---------------+
+                    |
+                    | WebSocket
+                    v
++-------------------+---------------+
+|           WebSocket Server         |
+|         (Node.js + ws library)    |
++-------------------+---------------+
+                    |
+                    | Database Query
+                    v
++-------------------+---------------+
+|           Prisma Client            |
+|        (ORM for PostgreSQL)        |
++-------------------+---------------+
+                    |
+                    | API Calls
+                    v
++-------------------+---------------+
+|        OpenWeatherMap API          |
+|                                   |
++-----------------------------------+
+
+
+Architecture Explanation
+User Interface:
+Built using Next.js, this layer handles user interactions and displays weather data. It connects to the WebSocket server for real-time alerts and updates.
+WebSocket Server:
+This component manages WebSocket connections and facilitates real-time communication between clients (UI) and the server. It triggers alerts based on temperature thresholds defined by users.
+Prisma Client:
+An ORM that interfaces with your PostgreSQL database. It handles CRUD operations for user settings and weather data.
+OpenWeatherMap API:
+This external API is called to fetch the current weather data for various cities. The data is processed and stored in the database for further analysis.
+How It All Works Together
+Users set their weather preferences through the UI, which sends data to the server.
+The server fetches real-time weather data from the OpenWeatherMap API at scheduled intervals or on demand.
+Weather data is stored in the database via Prisma. Daily summaries are generated and stored.
+The server checks the temperature against user-defined thresholds. If an alert condition is met, a message is sent through the WebSocket server to notify connected clients in real time.
+This architecture allows for efficient data retrieval, user interaction, and real-time notifications, creating a robust weather monitoring system.
