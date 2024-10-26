@@ -1,5 +1,4 @@
 import React from 'react';
-
 export type WeatherDisplayProps = {
     location: string;
     temperature: number;
