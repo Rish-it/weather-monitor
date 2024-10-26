@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FocusCards } from './components/ui/focus-card';
