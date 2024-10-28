@@ -61,10 +61,11 @@ const DailySummary: React.FC = () => {
                         <div className="animate-pulse bg-gray-300 h-6 w-1/2 rounded mx-auto"></div>
                     </div>
                 ) : error ? (
-                    <div className="text-center text-red-500">
+                    <div className="text-center text-white">
                         <p>{error}</p>
-                        <p>Please check back later for today's weather summary!</p>
+                        <p>Please check back later for today&#39;s weather summary!</p>
                     </div>
+
                 ) : summaries.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {summaries.map((summary) => (
