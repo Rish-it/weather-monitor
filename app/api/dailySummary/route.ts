@@ -8,7 +8,7 @@ interface WeatherData {
     main: string;
     temp: number;
     feels_like: number;
-    dt: Date;
+    dt: Date; // Ensure this is of type Date, which is what Prisma uses
 }
 
 interface DailySummary {
@@ -19,16 +19,18 @@ interface DailySummary {
     dominantCondition: string;
 }
 
+// Calculate daily summary for a city based on the weather data
 function calculateDailySummary(data: WeatherData[]): DailySummary | null {
     if (!data.length) return null;
 
-    const avgTemp = data.reduce((acc: number, curr: WeatherData) => acc + curr.temp, 0) / data.length;
-    const maxTemp = Math.max(...data.map((item: WeatherData) => item.temp));
-    const minTemp = Math.min(...data.map((item: WeatherData) => item.temp));
+    const totalTemp = data.reduce((acc, curr) => acc + curr.temp, 0);
+    const avgTemp = totalTemp / data.length;
+    const maxTemp = Math.max(...data.map(item => item.temp));
+    const minTemp = Math.min(...data.map(item => item.temp));
     const dominantCondition = getDominantCondition(data);
 
     return {
-        city: data[0].city,  // Assuming all entries in data have the same city
+        city: data[0].city,
         averageTemperature: avgTemp,
         maxTemperature: maxTemp,
         minTemperature: minTemp,
@@ -36,14 +38,15 @@ function calculateDailySummary(data: WeatherData[]): DailySummary | null {
     };
 }
 
+// Get the dominant weather condition based on frequency
 function getDominantCondition(data: WeatherData[]) {
     const conditionCount: { [key: string]: number } = {};
 
-    data.forEach((item: WeatherData) => {
+    data.forEach(item => {
         const condition = item.main;
         conditionCount[condition] = (conditionCount[condition] || 0) + 1;
     });
-    
+
     // Return the condition with the highest count
     return Object.keys(conditionCount).reduce((a, b) => conditionCount[a] > conditionCount[b] ? a : b);
 }
@@ -51,8 +54,13 @@ function getDominantCondition(data: WeatherData[]) {
 export async function GET() {
     try {
         const today = new Date();
-        const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-        const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+        // Adjust to UTC for start and end of day
+        const startOfDay = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0, 0, 0));
+        const endOfDay = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 23, 59, 59, 999));
+
+        // Log the start and end of the day
+        console.log("Start of Day (UTC):", startOfDay);
+        console.log("End of Day (UTC):", endOfDay);
 
         // Fetch weather data for the day
         const dailyData: WeatherData[] = await prisma.weather.findMany({
@@ -68,14 +76,14 @@ export async function GET() {
         console.log("Fetched Daily Data:", dailyData);
 
         // Check if any data was fetched
-        if (dailyData.length === 0) {
+        if (!dailyData.length) {
             console.warn("No weather data found for today.");
             return NextResponse.json({ error: "No weather data found for today." }, { status: 404 });
         }
 
         // Group data by city
         const cityGroups: { [key: string]: WeatherData[] } = {};
-        dailyData.forEach((item) => {
+        dailyData.forEach(item => {
             if (!cityGroups[item.city]) {
                 cityGroups[item.city] = [];
             }
