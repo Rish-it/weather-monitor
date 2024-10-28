@@ -14,7 +14,8 @@ The Weather Monitoring Application provides real-time weather data and alerts fo
 - Built with Next.js and TypeScript.
 
 ## Console ScreenShots
-![Summary Example](ss.png)
+![Summary Example](public/ss.png)
+
 
 
 ## Getting Started
