@@ -44,6 +44,7 @@ function getDominantCondition(data: WeatherData[]) {
         conditionCount[condition] = (conditionCount[condition] || 0) + 1;
     });
     
+    // Return the condition with the highest count
     return Object.keys(conditionCount).reduce((a, b) => conditionCount[a] > conditionCount[b] ? a : b);
 }
 
@@ -66,10 +67,14 @@ export async function GET() {
         // Log the fetched daily data
         console.log("Fetched Daily Data:", dailyData);
 
-        // Group data by city
-        const summaries: DailySummary[] = [];
-        const cityGroups: { [key: string]: WeatherData[] } = {};
+        // Check if any data was fetched
+        if (dailyData.length === 0) {
+            console.warn("No weather data found for today.");
+            return NextResponse.json({ error: "No weather data found for today." }, { status: 404 });
+        }
 
+        // Group data by city
+        const cityGroups: { [key: string]: WeatherData[] } = {};
         dailyData.forEach((item) => {
             if (!cityGroups[item.city]) {
                 cityGroups[item.city] = [];
@@ -77,7 +82,11 @@ export async function GET() {
             cityGroups[item.city].push(item);
         });
 
+        // Log grouped data
+        console.log("City Groups:", cityGroups);
+
         // Calculate aggregates for each city
+        const summaries: DailySummary[] = [];
         for (const city in cityGroups) {
             const summary = calculateDailySummary(cityGroups[city]);
             if (summary) {
@@ -88,6 +97,7 @@ export async function GET() {
         // Log the summaries
         console.log("Daily Summaries:", summaries);
 
+        // Return the summaries
         return NextResponse.json({ success: true, data: summaries });
     } catch (error) {
         console.error("Error generating daily summary:", error);

@@ -13,34 +13,35 @@ interface DailySummaryData {
 const DailySummary: React.FC = () => {
     const [summaries, setSummaries] = useState<DailySummaryData[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
-        setIsMounted(true); // Set mounted to true only on the client side
+        setIsMounted(true);
 
         const fetchDailySummary = async () => {
             try {
+                setLoading(true);
                 const response = await fetch('/api/dailySummary');
                 const data = await response.json();
 
                 if (response.ok) {
                     setSummaries(data.data);
+                    setError(null);
                 } else {
                     setError(data.error || 'Failed to fetch daily summary');
                 }
             } catch {
                 setError('An error occurred while fetching the daily summary');
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchDailySummary();
     }, []);
 
-    if (!isMounted) return null; // Avoid rendering on the server
-
-    if (error) {
-        return <div className="text-red-500 text-center">Error: {error}</div>;
-    }
+    if (!isMounted) return null;
 
     const chartData = {
         labels: summaries.map((summary) => summary.city),
@@ -53,7 +54,18 @@ const DailySummary: React.FC = () => {
         <div className="p-6 max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-6">Daily Summary</h2>
             <div className="bg-black bg-opacity-10 backdrop-blur-md p-6 rounded-lg shadow-lg border border-opacity-10">
-                {summaries.length > 0 ? (
+                {loading ? (
+                    <div className="space-y-4">
+                        <div className="animate-pulse bg-gray-300 h-6 w-3/4 rounded mx-auto"></div>
+                        <div className="animate-pulse bg-gray-300 h-6 w-2/4 rounded mx-auto"></div>
+                        <div className="animate-pulse bg-gray-300 h-6 w-1/2 rounded mx-auto"></div>
+                    </div>
+                ) : error ? (
+                    <div className="text-center text-red-500">
+                        <p>{error}</p>
+                        <p>Please check back later for today's weather summary!</p>
+                    </div>
+                ) : summaries.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {summaries.map((summary) => (
                             <div key={summary.city} className="bg-white bg-opacity-10 backdrop-blur-sm p-4 text-white rounded-lg shadow-md transition-transform transform hover:scale-105">
@@ -66,7 +78,7 @@ const DailySummary: React.FC = () => {
                         ))}
                     </div>
                 ) : (
-                    <p className="text-center">Loading...</p>
+                    <p className="text-center text-gray-500">No data available for today. Please check back later.</p>
                 )}
             </div>
 
