@@ -13,6 +13,10 @@ The Weather Monitoring Application provides real-time weather data and alerts fo
 - User-defined alerts for temperature thresholds.
 - Built with Next.js and TypeScript.
 
+## Console ScreenShots
+![Summary Example](ss.png)
+
+
 ## Getting Started
 
 To set up and run this application locally, follow these steps:
