@@ -1,23 +1,23 @@
-# Use the official Node.js image.
+# Use the official Node.js image
 FROM node:18
 
-# Set the working directory in the container.
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json files.
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies.
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code.
+# Copy all application files
 COPY . .
 
-# Build the Next.js application.
+# Build Next.js application
 RUN npm run build
 
-# Expose the port that the app runs on.
-EXPOSE 3000
+# Expose both ports for WebSocket (8080) and Next.js (3000)
+EXPOSE 3000 8080
 
-# Start the Next.js application.
-CMD ["npm", "start"]
+# Start both the Next.js and WebSocket servers
+CMD ["npx", "concurrently", "npm:start", "node websocketServer.cjs"]

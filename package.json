@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "build": "prisma generate && next build",  
+    "build": "prisma generate && next build && npm run build:websocket",
+    "build:websocket": "tsc websocketServer.ts --outDir dist",
+    "start": "next start",
+    "start:websocket": "node dist/websocketServer.js",
+    "start:all": "concurrently \"npm run start\" \"npm run start:websocket\"",
     "lint": "next lint"
   },
   "dependencies": {
@@ -14,6 +18,8 @@
     "axios": "^1.7.7",
     "chart.js": "^4.4.5",
     "clsx": "^2.1.1",
+    "concurrently": "^9.0.1",
+    "dotenv": "^16.0.3",
     "framer-motion": "^11.11.10",
     "next": "15.0.1",
     "node-cron": "^3.0.3",

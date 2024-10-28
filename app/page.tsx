@@ -29,7 +29,7 @@ const cityImages: { [key: string]: string } = {
 
 const Home: React.FC = () => {
     const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
-    const apiKey = 'a3c19ed6b404caad423f7a5ac8a418f3'; // Your OpenWeatherMap API key
+    const apiKey = '592da810722110ac1b137c388815c961'; // Your OpenWeatherMap API key
     const cities = Object.keys(cityImages); // Use keys from cityImages to ensure we get all cities
 
     useEffect(() => {

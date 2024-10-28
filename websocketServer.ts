@@ -1,5 +1,6 @@
 // websocketServer.ts
 import { WebSocketServer, WebSocket } from 'ws';
+import 'dotenv/config';
 
 const wss = new WebSocketServer({ port: 8080 });
 const alertClients: Set<WebSocket> = new Set();
